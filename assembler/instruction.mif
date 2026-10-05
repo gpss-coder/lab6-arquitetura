@@ -1,0 +1,30 @@
+DEPTH = 256;            -- The size of memory in words
+WIDTH = 32;             -- The size of data in bits
+ADDRESS_RADIX = HEX;    -- The radix for address values
+DATA_RADIX = HEX;       -- The radix for data values
+CONTENT                 -- Start of (address: data pairs)
+BEGIN
+
+000 : 00002083;  -- lw x1,0(x0)
+001 : 00402103;  -- lw x2,4(x0)
+002 : 01002183;  -- lw x3,16(x0)        # KEY[3]
+003 : 00C02203;  -- lw x4,12(x0)       # KEY[2]
+004 : 00802283;  -- lw x5,8(x0)       # KEY[1]
+005 : 01402383;  -- lw x7,20(x0)
+006 : 00000333;  -- add x6,x0,x0        # x6 = contador = 0
+007 : 0040A403;  -- lw x8,4(x1)        # [loop] x8 = KEY atual
+008 : 0083F4B3;  -- and x9,x7,x8
+009 : 40938533;  -- sub x10,x7,x9       # x10 = botões recém-apertados
+00A : 000403B3;  -- add x7,x8,x0
+00B : 003575B3;  -- and x11,x10,x3
+00C : 00058463;  -- beq x11,x0,8        # KEY[3] não apertado? pula o add
+00D : 00230333;  -- add x6,x6,x2        # incrementa
+00E : 004575B3;  -- and x11,x10,x4
+00F : 00058463;  -- beq x11,x0,8
+010 : 40230333;  -- sub x6,x6,x2        # decrementa
+011 : 005575B3;  -- and x11,x10,x5
+012 : 00058463;  -- beq x11,x0,8
+013 : 40630333;  -- sub x6,x6,x6        # zera
+014 : 0060A623;  -- sw x6,12(x1)       # LEDG = contador (só 9 bits aparecem)
+015 : FC0004E3;  -- beq x0,x0,-56       # volta ao [loop]
+END;
